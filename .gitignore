@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.
 chatGPT/
+Test/
 
 # C extensions
 *.so
