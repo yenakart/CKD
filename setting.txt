@@ -1,10 +1,10 @@
 [General]
-Source_dir = C:\CKD\MCOut
+Source_dir = D:\F.Forvia\P.Programming\2. Penguin\CKD\Test\MCOut
 Source_sub_dir = 00, 01, 02, 03, 04A, 04B
-Target_dir = C:\CKD\MCOutMoved
-Log_dir = C:\CKD\Log
-Zip_dir = C\CKD\MCOutZip
-Polling_interval = 1000
+Target_dir = D:\F.Forvia\P.Programming\2. Penguin\CKD\Test\MCOutMoved
+Log_dir = D:\F.Forvia\P.Programming\2. Penguin\CKD\Test\Log
+Zip_dir = D:\F.Forvia\P.Programming\2. Penguin\CKD\Test\MCOutZip
+Polling_interval = 1
 
 [Format]
 Result_0_If_FileEnd = OK, Judge, WN

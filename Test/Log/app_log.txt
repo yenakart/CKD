@@ -1,0 +1,18 @@
+2025-01-23 23:55:51.091187 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:55:54.139783 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:55:57.157773 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:00.187968 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:03.238054 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:06.266357 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:09.295901 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:12.350878 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
+2025-01-23 23:56:15.387732 - File: 333240D001250121000201_20250121162243_WN.csv, Sent: uploadData;1;-1;1;333240D001250121000201;-1;1;0;
+, Response: [WinError 10061] No connection could be made because the target machine actively refused it, Connected: False
