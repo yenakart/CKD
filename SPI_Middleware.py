@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread
 
 # Load configuration from setting.txt
-def load_config(config_file="setting.txt"):
+def load_config(config_file="SPI_Middleware_setting.ini"):
     config = ConfigParser()
     config.read(config_file)
     return config

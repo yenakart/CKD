@@ -11,7 +11,7 @@ stop_thread = False
 
 def read_settings():
     config = ConfigParser()
-    config.read("writer_setting.txt")
+    config.read("CSVFile_Writer_setting.ini")
 
     source_dir = config.get("General", "Source_dir")
     source_sub_dirs = config.get("General", "Source_sub_dir").split(", ")
