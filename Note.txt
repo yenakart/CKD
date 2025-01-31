@@ -1,13 +1,14 @@
+Date : 31 Jan 2024
 Program Purpose :
 
-1. CSVFile_Writer.py
-To simulate the machine that writes the processing/inspection result into log files. 
+0. Fake_server
+Simulated HSC server
 
-2. SPI_Middleware.py
+1. SPI_Middleware.py
 Our main purpose here. The middleware to collect log file and send to the HSC server
 
-3. Fake_server
-Simulated HSC server
+2. CSVFile_Writer.py
+To simulate the machine that writes the processing/inspection result into log files. 
 
 
 To Run the programs :
