@@ -1,4 +1,4 @@
-# Version 2 : 25 Jan 25
+# Version 3 : 30 Jan 25
 
 import socket
 import threading
@@ -7,35 +7,40 @@ from tkinter import Button
 from datetime import datetime
 import time
 import configparser
+import random
+import string
+import pyodbc  # MSSQL connection
 
 class FakeTCPServer:
     def __init__(self, master, config):
         self.master = master
         self.config = config
+        
+        self.machine_names = config['Machine_Names']
+        self.machine_types = config['Machine_Types']
         self.ports = config['Ports']
         self.response_delay = config['Response_Delay'] / 1000  # Convert ms to seconds
         self.log_file = config['Log_File']
-        self.server_threads = []
-        self.running = False
-        self.lock = threading.Lock()
-        self.response_counters = {port: 0 for port in self.ports}
 
+        self.db_connection_string = f"DRIVER={{SQL Server}};SERVER={config['MSSQL_Address']};DATABASE={config['MSSQL_DB']};UID={config['User']};PWD={config['Pwd']};"
+        self.table_false = config['Table_False']
+        self.server_threads = []
+        self.response_counters = {port: 0 for port in self.ports}
         # Tkinter setup
         self.master.geometry("1200x900")  # Make the window wider
         self.master.title("Fake TCP Server")
+        self.running = False
         self.frames = {}
         self.text_widgets = {}
 
         self.setup_monitor_windows()
 
-        # Add Start and Stop buttons
-        self.start_button = Button(master, text="Start", command=self.start_servers)
-        self.start_button.grid(row=5, column=0, columnspan=2, pady=5)
+        self.toggle_button = Button(master, text="Start", command=self.toggle_servers, font=("Arial", 14), width=10, height=2)
+        self.toggle_button.grid(row=5, column=0, columnspan=1, pady=10)
 
-        self.stop_button = Button(master, text="Stop", command=self.stop_servers)
-        self.stop_button.grid(row=5, column=2, columnspan=2, pady=5)
+        self.clear_button = Button(master, text="Clear", command=self.clear_logs, font=("Arial", 14), width=10, height=2)
+        self.clear_button.grid(row=5, column=1, columnspan=1, pady=10)
 
-        # Handle window close
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def setup_monitor_windows(self):
@@ -49,7 +54,7 @@ class FakeTCPServer:
             frame = tk.Frame(self.master, borderwidth=1, relief="solid")
             frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
-            label = tk.Label(frame, text=f"Port {port}")
+            label = tk.Label(frame, text=f"Port {port} : {self.machine_names[idx]} ({self.machine_types[idx]})")
             label.pack(anchor=tk.W)
 
             text_widget = tk.Text(frame, width=30, height=10)
@@ -61,7 +66,6 @@ class FakeTCPServer:
         for i in range(cols):
             self.master.columnconfigure(i, weight=1)
 
-
     def log_message(self, port, message):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"[{timestamp}] {message}\n"
@@ -70,6 +74,26 @@ class FakeTCPServer:
         with open(self.log_file, "a") as log:
             log.write(log_entry)
 
+    def clear_logs(self):
+        for text_widget in self.text_widgets.values():
+            text_widget.delete("1.0", tk.END)
+
+    def update_background(self, rgb):
+        """Convert RGB tuple to hex and update background color of message windows."""
+        hex_color = f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'  # Convert (R, G, B) to #RRGGBB
+        for port in self.text_widgets:
+            self.text_widgets[port].config(bg=hex_color)
+
+    def toggle_servers(self):
+        if self.running:
+            self.stop_servers()
+            self.toggle_button.config(text="Start")
+            self.update_background((255, 255, 255))  # Change background to white when stopped
+        else:
+            self.start_servers()
+            self.toggle_button.config(text="Stop")
+            self.update_background((204, 255, 230))  # Change background to pale green when running
+
     def handle_client(self, client_socket, port):
         while self.running:
             try:
@@ -77,18 +101,18 @@ class FakeTCPServer:
                 if not data:
                     break
                 self.log_message(port, f"Received: {data}")
-
-                # Parse message type
+                
+				# Parse message type
                 if data.startswith("\x02uploadData;"):
                     response = self.handle_upload_data(port)
                 elif data.startswith("\x02productStart;"):
-                    response = self.handle_product_start(port)
-                elif data.startswith("\x02uploadFailure;"):
+                    response = self.handle_product_start(port, data)
+                elif data.startswith("\x02uploadFailures;"):
                     response = self.handle_upload_failure(port)
                 else:
                     response = "Unknown message type"
 
-                time.sleep(self.response_delay)  # Introduce delay if configured
+                time.sleep(self.response_delay)
                 client_socket.sendall(response.encode('utf-8'))
                 self.log_message(port, f"Sent: {response}")
             except Exception as e:
@@ -96,17 +120,52 @@ class FakeTCPServer:
                 break
         client_socket.close()
 
+	# Sub-routine to handle each message type
+        
+    def generate_random_serial(self):
+        return ''.join(random.choices(string.ascii_uppercase, k=6)) + ''.join(random.choices(string.digits, k=9))
+
+    def query_block_numbers(self, serial):
+        query = '''
+        SELECT BlockNumber, MIN(CAST(Confirm AS INT)) AS Total_Confirm
+        FROM {self.table_false}
+        WHERE BarcodeID = ?
+        GROUP BY BlockNumber
+        ORDER BY BlockNumber ASC'''
+        block_numbers = []
+        try:
+            conn = pyodbc.connect(self.db_connection_string)
+            cursor = conn.cursor()
+            cursor.execute(query, (serial,))
+            for row in cursor.fetchall():
+                block_numbers.append(row.BlockNumber)
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            print(f"Database error: {e}")
+        return block_numbers
+
+    def handle_product_start(self, port, data):
+        try:
+            parts = data.strip().split(';')
+            if len(parts) < 3:
+                return "Error: Invalid data format"
+            event_id, serial = parts[1], parts[2]
+            block_numbers = self.query_block_numbers(serial)
+            serial_numbers = len(block_numbers)
+            serial_data = [f"{self.generate_random_serial()};{block};0" for block in block_numbers]
+            response = f"productStart;{event_id};0;OK;{serial_numbers};" + ';'.join(serial_data) + "\x0D\x0A"
+            return response
+        except Exception as e:
+            return f"Error: {e}"
+        
     def handle_upload_data(self, port):
         self.response_counters[port] += 1
-        return f"{self.response_counters[port]:03d} ACK: Received uploadData"
-
-    def handle_product_start(self, port):
-        self.response_counters[port] += 1
-        return f"{self.response_counters[port]:03d} ACK: Product started"
+        return f"{self.response_counters[port]:03d} ACK: Received uploadData\n"
 
     def handle_upload_failure(self, port):
         self.response_counters[port] += 1
-        return f"{self.response_counters[port]:03d} ACK: Upload failure received"
+        return f"{self.response_counters[port]:03d} ACK: Received Upload failures\n"
 
     def start_server(self, port):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,7 +173,7 @@ class FakeTCPServer:
         server_socket.listen(5)
         server_socket.settimeout(1.0)
         self.log_message(port, f"Listening on port {port}")
-
+        
         while self.running:
             try:
                 client_socket, addr = server_socket.accept()
@@ -123,54 +182,54 @@ class FakeTCPServer:
                 client_thread.daemon = True
                 client_thread.start()
             except socket.timeout:
-                continue  # Periodically check if the server is still running
+                continue
             except Exception as e:
                 self.log_message(port, f"Server error: {e}")
                 break
-
         server_socket.close()
-        self.log_message(port, f"Server on port {port} stopped")
 
     def start_servers(self):
         if self.running:
             return
         self.running = True
         for port in self.ports:
-            server_thread = threading.Thread(target=self.start_server, args=(port,))
-            server_thread.daemon = True
-            self.server_threads.append(server_thread)
-            server_thread.start()
+            thread = threading.Thread(target=self.start_server, args=(port,))
+            thread.daemon = True
+            self.server_threads.append(thread)
+            thread.start()
 
     def stop_servers(self):
         self.running = False
         for thread in self.server_threads:
-            thread.join(timeout=1)  # Timeout ensures GUI remains responsive
+            thread.join(timeout=1)
+        for port in self.ports: 
+            self.log_message(port, f"Connection closed.")
         self.server_threads = []
-        # self.log_message(0, "All servers stopped")  # Example log for feedback
 
     def on_close(self):
         self.stop_servers()
         self.master.destroy()
 
-# Read configuration from file using configparser
 def read_config(file_path):
     parser = configparser.ConfigParser()
     parser.read(file_path)
+    return {
+        'MSSQL_Address': parser.get('DB_Server', 'MSSQL_Address'),
+        'MSSQL_DB': parser.get('DB_Server', 'MSSQL_DB'),
+        'User':parser.get('DB_Server', 'User'),
+        'Pwd':parser.get('DB_Server', 'Pwd'),
+        'Table_False':parser.get('DB_Server', 'Table_False'),
 
-    config = {
-        'Ports': list(map(int, parser.get('Server', 'Ports').split(','))),
-        'Response_Delay': parser.getint('Server', 'Response_Delay'),
-        'Log_File': parser.get('Server', 'Log_File')
+        'Machine_Names': list(parser.get('HSC_Server', 'Machine_Names').split(',')),
+        'Machine_Types': list(parser.get('HSC_Server', 'Machine_Types').split(',')),
+        'Ports': list(map(int, parser.get('HSC_Server', 'Ports').split(','))),
+        'Response_Delay': parser.getint('HSC_Server', 'Response_Delay'),
+        'Log_File': parser.get('HSC_Server', 'Log_File')
     }
-    return config
 
-# Entry point for Tkinter app
 def main():
     root = tk.Tk()
-
-    # Read configuration
     config = read_config("0_Fake_Server_setting.ini")
-
     app = FakeTCPServer(root, config)
     root.mainloop()
 

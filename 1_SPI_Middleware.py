@@ -66,7 +66,7 @@ def log_to_status_window(status_window, message):
 
 ########### 3. Main structure management ##########
 
-# Process files in a single subdirectory
+# Process files in a single subdirectory, LOOP is here !
 def process_subdir(sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval, status_window):
     event_id = 1  # Initialize event ID counter
     log_to_status_window(status_window, f"Start Monitoring: {sub_dir}")
