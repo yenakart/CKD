@@ -18,3 +18,13 @@ Step 2 : > python SPI_Middleware.py
 Step 3 : > python CSVFile_Writer.py
 
 Then the user input the simulated parameters into CSVFile_Writer edit boxes
+
+1 Feb: Version 0.1
+- Separate Helper function
+- Re-load config when press 'Start' button
+- Menu for File>Config, Help>About, Help>Statistics
+- Has simple password for File>Config
+- Dynamic GUI blaock based on number of machine name in config file
+- 'Clear' button
+- Can be used in both CSV (CKD) and XML (Palmi)
+- Highly configurable INI
