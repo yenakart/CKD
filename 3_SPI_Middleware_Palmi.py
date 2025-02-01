@@ -11,7 +11,6 @@ import xml.etree.ElementTree as ET
 import re
 
 ############ 1. Variable Definition #############
-# Read configuration from AOI_Middleware_setting.ini
 config = configparser.ConfigParser()
 config.read('3_SPI_Middleware_setting.ini')
 
@@ -21,31 +20,29 @@ file_types = [ft.strip() for ft in config.get('Source', 'File_Types').split(',')
 target_dir = config.get('Source', 'Target_Dir')  # Target directory for processed files
 log_dir = config.get('Source', 'Log_Dir')  # Directory for storing log files
 polling_interval = int(config.get('Source', 'Polling_Interval', fallback=5))  # Polling interval in seconds
-
 xml_mappings = dict(config.items("PALMI_XML_Mapping"))
-
 csv_result_0_conditions = [ft.strip() for ft in config.get('Pass_Condition', 'CSV_Result_0_If_FileEnd').split(',')]  # Conditions for determining serial state
 xml_result_0_conditions = [ft.strip() for ft in config.get('Pass_Condition', 'XML_Result_0_If_ResultCode').split(',')]  # Conditions for determining serial state
-
+standby_time= int(config.get('Machine_State_Time', 'Standby_Time', fallback=600)) # 10 Min
+unknown_time= int(config.get('Machine_State_Time', 'Unknown_Time', fallback=1800)) # 30 Min
 hsc_address = config.get('HSC_Server', 'HSC_Address')  # Target address for TCP communication
 hsc_ports = config.get('HSC_Server', 'HSC_Port').split(',')  # Ports for TCP communication per subdirectory
 machine_names = [ft.strip() for ft in config.get('HSC_Server', 'Machine_Names').split(',')]
 machine_types = [ft.strip() for ft in config.get('HSC_Server', 'Machine_Types').split(',')]
+machine_updates = [datetime.now()] * len(machine_names)
+machine_statuses = ["Unknown"] * len(machine_names)
 
 MAX_LINES = 300  # Max number of lines to display 
 
 stop_event = threading.Event()
 threads = []  # Store running threads
 server_running = False
-last_wait_time = None
 wait_message_id = None
 last_print_wait = False
 
 ########### 2. Helper function  ########## 
-
 ### 2.1 Prepare data input, CSV ###
 
-# Read all .csv files from a directory sorted by modification date
 def get_csv_files_sorted_by_date(directory):
     files = [f for f in os.listdir(directory) if f.endswith('.csv')]
     files_with_dates = [(f, os.path.getmtime(os.path.join(directory, f))) for f in files]
@@ -57,7 +54,6 @@ def parse_filename(filename):
     if len(parts) == 3:
         return parts[0], parts[1], parts[2].split('.')[0]
     return None, None, None
-
 
 ### 2.2 Prepare data input, XML ###
 
@@ -161,18 +157,43 @@ def update_display(text, replace_last=False):
     trim_message_display()  # Call this function to limit message lines
     text_area.see(tk.END)
 
+# Update machine rectangles on GUI
+def update_rectangles(idx):
+
+    elapsed_time = (datetime.now() - machine_updates[idx]).seconds
+
+    # Determine color based on elapsed time
+    if machine_statuses[idx] == "Error":
+        color = "red"
+    elif machine_statuses[idx] == "File_issue":
+        color = "orange"
+    elif elapsed_time > unknown_time: 
+        machine_statuses[idx] = "Unknown"
+        color = "grey"
+    elif elapsed_time > standby_time:
+        machine_statuses[idx] = "Standby"
+        color = "yellow"
+    elif machine_statuses[idx] == "OK":
+        color = "green"
+    else: 
+        color = "grey"
+
+    machine_rects[idx].config(text=f"{machine_names[idx]}\n{elapsed_time} s", bg=color) # Update GUI rectangle
+
 ########### 3. Main structure management ##########
 
 # Process XML files in a multi-level subdirectory, LOOP is here !
-def process_subdir_xml(root_dir, target_root_dir, log_dir, xml_mappings, result_0_conditions, hsc_address, hsc_port, polling_interval):
-    # event_id = 1  # Initialize event ID counter
+def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, result_0_conditions, hsc_address, hsc_port, polling_interval):
+
     update_display(f"Start Monitoring XML: {root_dir}")
 
     while not stop_event.is_set():
 
+        update_rectangles(idx)
+
         xml_files = find_xml_files(root_dir)
 
-        for file_name in xml_files:
+        for file_name in xml_files: # Case 2 : New file to process
             
             if stop_event.is_set():
                 return  # Exit thread immediately
@@ -182,6 +203,7 @@ def process_subdir_xml(root_dir, target_root_dir, log_dir, xml_mappings, result_
 
             if not serial or not event_id or not result:
                 update_display(f"Skipping invalid file : {file_name}")
+                machine_statuses[idx] = "File_issue"
                 continue
 
             # Determine the serial state based on the result
@@ -205,18 +227,26 @@ def process_subdir_xml(root_dir, target_root_dir, log_dir, xml_mappings, result_
                 shutil.move(file_name, target_path)  # Move file
                 update_display(f"Processed and moved file: {file_name}")
 
+                #machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="green") # Update GUI rectangle
+                machine_updates[idx] = datetime.now()
+                machine_statuses[idx] = "OK"
+            else :
+                machine_statuses[idx] = "Error"
+
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
 
 # Process CSV files in a single subdirectory, LOOP is here !
-def process_subdir_csv(sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
+def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
     event_id = 1  # Initialize event ID counter
     update_display(f"Start Monitoring CSV: {sub_dir}")
 
     while not stop_event.is_set():
-        # Get sorted list of CSV files in the directory
-        if not os.path.exists(sub_dir):
-            os.makedirs(sub_dir)
+
+        update_rectangles(idx)
+
+        #if not os.path.exists(sub_dir): 
+        #    os.makedirs(sub_dir)
 
         files = get_csv_files_sorted_by_date(sub_dir)
 
@@ -248,6 +278,10 @@ def process_subdir_csv(sub_dir, target_sub_dir, log_dir, result_0_conditions, hs
 
                 # Increment the event ID, looping back to 1 after 9999
                 event_id = (event_id % 9999) + 1
+                machine_updates[idx] = datetime.now()
+                machine_statuses[idx] = "OK"                
+            else :
+                machine_statuses[idx] = "Error"
 
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
@@ -271,13 +305,13 @@ def process_files():
         # Create a thread for processing each subdirectory
         if(file_types[idx] == 'CSV'):
             t_target = process_subdir_csv
-            t_args = (sub_dir_path, target_sub_dir, log_dir, csv_result_0_conditions, hsc_address, hsc_ports[idx], polling_interval)
+            t_args = (idx, sub_dir_path, target_sub_dir, log_dir, csv_result_0_conditions, hsc_address, hsc_ports[idx], polling_interval)
 
         elif (file_types[idx] == 'XML'):
             t_target = process_subdir_xml
             root_dir =  os.path.join(source_dir, source_sub_dirs[idx]) 
             target_root_dir = os.path.join(target_dir, source_sub_dirs[idx])  
-            t_args = (root_dir, target_root_dir, log_dir, xml_mappings, xml_result_0_conditions, hsc_address, hsc_ports[idx], polling_interval)
+            t_args = (idx, root_dir, target_root_dir, log_dir, xml_mappings, xml_result_0_conditions, hsc_address, hsc_ports[idx], polling_interval)
 
         thread = threading.Thread(target=t_target, args=t_args, daemon=True)  # Mark thread as a daemon so it exits with the main program
         thread.start()
@@ -286,7 +320,6 @@ def process_files():
 ############ 4. GUI fucntion #############
 
 def update_background(rgb):
-    #Convert RGB tuple to hex and update background color of message windows.
     hex_color = f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'  # Convert (R, G, B) to #RRGGBB
     text_area.config(bg=hex_color)
 
@@ -317,7 +350,27 @@ def toggle_thread():
 # Initialize the Tkinter application
 root = tk.Tk()
 root.title("SPI Middleware")
+root.minsize(width=1000, height=500)  # User cannot resize below 500x300
 
+# Frame for machine indicators
+status_frame = tk.Frame(root)
+status_frame.pack(pady=10)
+
+machine_rects = []
+for i, name in enumerate(machine_names):
+    machine_rect = tk.Label(
+        status_frame,
+        text=f"{name}\n0s",
+        bg="grey",
+        fg="white",
+        width=15,
+        height=3,
+        relief="ridge"
+    )
+    machine_rect.grid(row=0, column=i, padx=5, pady=5)
+    machine_rects.append(machine_rect)
+
+# Frame for message windows
 frame = tk.Frame(root)
 frame.pack(fill="both", expand=True, padx=10, pady=10)
 
