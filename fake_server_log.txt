@@ -165,3 +165,32 @@
 [2025-02-01 03:32:32] Connection closed.
 [2025-02-01 03:32:32] Connection closed.
 [2025-02-01 03:32:32] Connection closed.
+[2025-02-01 09:43:39] Listening on port 5336
+[2025-02-01 09:43:39] Listening on port 5337
+[2025-02-01 09:43:39] Listening on port 5340
+[2025-02-01 09:43:39] Listening on port 5335
+[2025-02-01 09:43:39] Listening on port 5341
+[2025-02-01 09:43:39] Listening on port 5339
+[2025-02-01 09:43:39] Listening on port 5342
+[2025-02-01 09:43:39] Listening on port 5338
+[2025-02-01 09:50:15] Connection from ('127.0.0.1', 60630)
+[2025-02-01 09:50:15] Received: uploadData;23492;-1;1;0;-1;0;0;
+
+[2025-02-01 09:50:15] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:49] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.
+[2025-02-01 10:51:52] Connection closed.

@@ -27,8 +27,10 @@ xml_mappings = dict(config.items("PALMI_XML_Mapping"))
 csv_result_0_conditions = [ft.strip() for ft in config.get('Pass_Condition', 'CSV_Result_0_If_FileEnd').split(',')]  # Conditions for determining serial state
 xml_result_0_conditions = [ft.strip() for ft in config.get('Pass_Condition', 'XML_Result_0_If_ResultCode').split(',')]  # Conditions for determining serial state
 
-hsc_address = config.get('Target', 'HSC_Address')  # Target address for TCP communication
-hsc_ports = config.get('Target', 'HSC_Port').split(',')  # Ports for TCP communication per subdirectory
+hsc_address = config.get('HSC_Server', 'HSC_Address')  # Target address for TCP communication
+hsc_ports = config.get('HSC_Server', 'HSC_Port').split(',')  # Ports for TCP communication per subdirectory
+machine_names = [ft.strip() for ft in config.get('HSC_Server', 'Machine_Names').split(',')]
+machine_types = [ft.strip() for ft in config.get('HSC_Server', 'Machine_Types').split(',')]
 
 MAX_LINES = 300  # Max number of lines to display 
 
