@@ -77,17 +77,17 @@ def determine_serial_state(result, result_0_conditions):
 ### 2.3 Send data output to many types of target ###
 
 # Send data over TCP and receive response
-def send_data_tcp(text_area, address, port, data):
+def send_data_tcp(address, port, data):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((address, port))
             s.sendall(data.encode('utf-8'))  # Send data to the target address and port
             response = s.recv(1024).decode('utf-8')  # Receive response from the target
-            update_display(text_area, f"Sent: {data[:-2]}")
-            update_display(text_area, f"Received: {response[:-1]}")
+            #update_display(text_area, f"Sent: {data[:-2]}")
+            #update_display(text_area, f"Received: {response[:-1]}")
             return response, True
     except Exception as e:
-        update_display(text_area, f"Error sending data to {address}:{port} - {e}")
+        #update_display(text_area, f"Error sending data to {address}:{port} - {e}")
         return str(e), False
 
 # Log events to a file for debugging and auditing
@@ -119,7 +119,7 @@ def update_display(text_area, text):
 
 def show_about():
     """Display About information."""
-    messagebox.showinfo("About", "AOI Middleware v0.1\nDeveloped by Scapegoat MM")
+    messagebox.showinfo("About", "SPI Middleware v0.1\nDeveloped by Scapegoat MM")
 
 def show_statistics():
     """Display Statistics information."""

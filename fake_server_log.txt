@@ -2170,3 +2170,311 @@
 [2025-02-01 16:19:58] Connection closed.
 [2025-02-01 16:19:58] Connection closed.
 [2025-02-01 16:19:58] Connection closed.
+[2025-02-01 22:39:37] Listening on port 5336
+[2025-02-01 22:39:37] Listening on port 5337
+[2025-02-01 22:39:37] Listening on port 5340
+[2025-02-01 22:39:37] Listening on port 5335
+[2025-02-01 22:39:37] Listening on port 5342
+[2025-02-01 22:39:37] Listening on port 5341
+[2025-02-01 22:39:37] Listening on port 5338
+[2025-02-01 22:39:37] Listening on port 5339
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:15] Connection closed.
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54238)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54239)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54240)
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250394536196;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250725449179;-1;0;0;
+
+[2025-02-01 22:45:33] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54241)
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250189943648;-1;0;0;
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54242)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54243)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54244)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54245)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54246)
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250211231171;-1;1;0;
+
+[2025-02-01 22:45:33] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54247)
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250506305327;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250133827420;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;1;-1;1;333240D001250970312985;-1;0;0;
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54248)
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54249)
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250601387014;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250877014771;-1;0;0;
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54250)
+[2025-02-01 22:45:33] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 001 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250793424815;-1;0;0;
+
+[2025-02-01 22:45:33] Connection from ('127.0.0.1', 54251)
+1250629352274;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250889750578;-1;0;0;
+
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250772431208;-1;0;0;
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:45:33] Received: uploadData;2;-1;1;333240D001250698096793;-1;1;0;
+
+[2025-02-01 22:45:33] Sent: 002 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54314)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54315)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54316)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54317)
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250773205540;-1;0;0;
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250265993094;-1;0;0;
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250647896881;-1;0;0;
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250293708962;-1;0;0;
+
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54318)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54319)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54320)
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250697526665;-1;0;0;
+
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250755045001;-1;0;0;
+
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54321)
+[2025-02-01 22:53:35] Connection from ('127.0.0.1', 54322)
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Received: uploadData;1;-1;1;333240D001250936787311;-1;0;0;
+
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Sent: 003 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Received: uploadData;2;-1;1;333240D001250438804331;-1;0;0;
+
+[2025-02-01 22:53:35] Received: uploadData;2;-1;1;333240D001250212373968;-1;0;0;
+
+[2025-02-01 22:53:35] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:35] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:38] Connection from ('127.0.0.1', 54325)
+[2025-02-01 22:53:38] Connection from ('127.0.0.1', 54326)
+[2025-02-01 22:53:38] Received: uploadData;2;-1;1;333240D001250249211600;-1;0;0;
+
+[2025-02-01 22:53:38] Received: uploadData;2;-1;1;333240D001250210324795;-1;0;0;
+
+[2025-02-01 22:53:38] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:38] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:38] Connection from ('127.0.0.1', 54327)
+[2025-02-01 22:53:38] Received: uploadData;2;-1;1;333240D001250816354092;-1;0;0;
+
+[2025-02-01 22:53:38] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:38] Connection from ('127.0.0.1', 54328)
+[2025-02-01 22:53:38] Received: uploadData;2;-1;1;333240D001250571897465;-1;0;0;
+
+[2025-02-01 22:53:38] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 22:53:38] Connection from ('127.0.0.1', 54329)
+[2025-02-01 22:53:38] Received: uploadData;2;-1;1;333240D001250960337307;-1;0;0;
+
+[2025-02-01 22:53:38] Sent: 004 ACK: Received uploadData
+
+[2025-02-01 23:08:11] Connection from ('127.0.0.1', 54461)
+[2025-02-01 23:08:11] Connection from ('127.0.0.1', 54462)
+[2025-02-01 23:08:11] Connection from ('127.0.0.1', 54463)
+[2025-02-01 23:08:11] Connection from ('127.0.0.1', 54464)
+[2025-02-01 23:08:11] Received: uploadData;1;-1;1;333240D001250136082024;-1;0;0;
+
+[2025-02-01 23:08:11] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:11] Received: uploadData;1;-1;1;333240D001250959816812;-1;0;0;
+
+[2025-02-01 23:08:11] Received: uploadData;1;-1;1;333240D001250484431113;-1;0;0;
+
+[2025-02-01 23:08:11] Received: uploadData;1;-1;1;333240D001250864783700;-1;0;0;
+
+[2025-02-01 23:08:11] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:11] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:11] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54466)
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54467)
+[2025-02-01 23:08:14] Received: uploadData;1;-1;1;333240D001250443351638;-1;0;0;
+
+[2025-02-01 23:08:14] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54468)
+[2025-02-01 23:08:14] Received: uploadData;1;-1;1;333240D001250897439382;-1;0;0;
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54469)
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54470)
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54471)
+[2025-02-01 23:08:14] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Received: uploadData;1;-1;1;333240D001250914302954;-1;1;0;
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250623021062;-1;0;0;
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250474240682;-1;0;0;
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54472)
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54473)
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250676769642;-1;0;0;
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54474)
+[2025-02-01 23:08:14] Sent: 005 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250334896418;-1;0;0;
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250362265649;-1;1;0;
+
+[2025-02-01 23:08:14] Connection from ('127.0.0.1', 54475)
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250137598353;-1;0;0;
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:08:14] Received: uploadData;2;-1;1;333240D001250883871812;-1;0;0;
+
+[2025-02-01 23:08:14] Sent: 006 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54517)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54518)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54519)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54520)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54521)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54522)
+[2025-02-01 23:11:47] Connection from ('127.0.0.1', 54523)
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250334363919;-1;0;0;
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250886249805;-1;0;0;
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250574971216;-1;0;0;
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250539080008;-1;0;0;
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250299205133;-1;0;0;
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250461123369;-1;0;0;
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Received: uploadData;1;-1;1;333240D001250840393486;-1;0;0;
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:47] Sent: 007 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54524)
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250864711649;-1;0;0;
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54525)
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54526)
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54527)
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54528)
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250686285419;-1;0;0;
+
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250212472352;-1;0;0;
+
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54529)
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250436538976;-1;0;0;
+
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250589448398;-1;0;0;
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Connection from ('127.0.0.1', 54530)
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250463824764;-1;0;0;
+
+[2025-02-01 23:11:50] Received: uploadData;2;-1;1;333240D001250429629825;-1;0;0;
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:11:50] Sent: 008 ACK: Received uploadData
+
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:49] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.
+[2025-02-01 23:25:52] Connection closed.

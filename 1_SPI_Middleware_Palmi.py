@@ -66,6 +66,7 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             if not serial or not event_id or not result:
                 update_display(text_area, f"Skipping invalid file : {file_name}")
                 machine_statuses[idx] = "File_issue"
+                machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="orange") # Update GUI rectangle
                 continue
 
             # Determine the serial state based on the result
@@ -75,7 +76,9 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp(text_area, hsc_address, int(hsc_port), data)
+            response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
+            update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+            # update_display(text_area, f"iTac  : {response}---------------------------------")
 
             # Log the event details
             log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
@@ -87,13 +90,14 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 
                 os.makedirs(os.path.dirname(target_path), exist_ok=True)  # Create target directories if needed
                 shutil.move(file_name, target_path)  # Move file
-                update_display(text_area, f"Processed and moved file: {file_name}")
+                # update_display(text_area, f"Processed and moved file: {file_name}")
 
-                #machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="green") # Update GUI rectangle
                 machine_updates[idx] = datetime.now()
                 machine_statuses[idx] = "OK"
+                machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="green") # Update GUI rectangle
             else :
                 machine_statuses[idx] = "Error"
+                machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
 
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
@@ -126,7 +130,9 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp(text_area, hsc_address, int(hsc_port), data)
+            response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
+            update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+            # update_display(text_area, f"iTac  : {response}---------------------------------")
 
             # Log the event details
             log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
@@ -136,14 +142,16 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
                 source_file = os.path.join(sub_dir, file_name)
                 target_file = os.path.join(target_sub_dir, file_name)
                 shutil.move(source_file, target_file)
-                update_display(text_area, f"Processed and moved file: {file_name}")
+                #update_display(text_area, f"Processed and moved file: {file_name}")
 
                 # Increment the event ID, looping back to 1 after 9999
                 event_id = (event_id % 9999) + 1
                 machine_updates[idx] = datetime.now()
-                machine_statuses[idx] = "OK"                
+                machine_statuses[idx] = "OK"    
+                machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="green") # Update GUI rectangle            
             else :
                 machine_statuses[idx] = "Error"
+                machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
 
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
@@ -220,7 +228,7 @@ def update_rectangles(idx):
     elif elapsed_time > unknown_time: 
         machine_statuses[idx] = "Unknown"
         color = "grey"
-    elif elapsed_time > standby_time:
+    elif elapsed_time > standby_time and machine_statuses[idx] == "OK":
         machine_statuses[idx] = "Standby"
         color = "yellow"
     elif machine_statuses[idx] == "OK":
@@ -261,7 +269,8 @@ def toggle_thread():
 # 0. Initialize the Tkinter application
 root = tk.Tk()
 root.title("SPI Middleware")
-root.minsize(width=1000, height=420)  # User cannot resize below 1000x500
+root.minsize(width=700, height=240)  # User cannot resize below 1000x500
+root.geometry("700x240") # Initial size
 
 # 1.Create a top-level menu
 menu_bar = tk.Menu(root)
@@ -280,21 +289,17 @@ root.config(menu=menu_bar)
 
 # 2. Frame for machine indicators
 status_frame = tk.Frame(root)
-status_frame.pack(pady=10)
+status_frame.pack(pady=5)
 
 for i, name in enumerate(machine_names):
-    machine_rect = tk.Label(status_frame, text=f"{name}\n0s", bg="grey", fg="white", width=15, height=3, relief="ridge")
+    machine_rect = tk.Label(status_frame, text=f"{name}\n0s", bg="grey", fg="white", width=10, height=3, relief="ridge")
     machine_rect.grid(row=0, column=i, padx=5, pady=5)
     machine_rects.append(machine_rect)
 
-# 3. Frame for message windows
 frame = tk.Frame(root)
 frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-text_area = scrolledtext.ScrolledText(frame, width=80, height=15)
-text_area.pack(fill="both", expand=True)
-
-# 4. Button for 'Start/Stop' and 'Clear'
+# 3. Button for 'Start/Stop' and 'Clear'
 def clear_text():
     text_area.delete(1.0, tk.END)
 
@@ -302,11 +307,15 @@ def clear_text():
 button_frame = tk.Frame(frame)
 button_frame.pack(pady=5)
 
-start_button = tk.Button(button_frame, text="Start", command=toggle_thread, font=("Arial", 14), width=10, height=2)
+start_button = tk.Button(button_frame, text="Start", command=toggle_thread, font=("Arial", 14), width=30, height=1)
 start_button.pack(side="left", padx=5)
 
-clear_button = tk.Button(button_frame, text="Clear", command=clear_text, font=("Arial", 14), width=10, height=2)
+clear_button = tk.Button(button_frame, text="Clear", command=clear_text, font=("Arial", 14), width=30, height=1)
 clear_button.pack(side="left", padx=5)
+
+# 4. Frame for message windows
+text_area = scrolledtext.ScrolledText(frame, width=80, height=20)
+text_area.pack(fill="both", expand=True, pady=10)
 
 # Entry point for the application
 if __name__ == "__main__":
