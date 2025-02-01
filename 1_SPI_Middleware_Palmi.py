@@ -4,6 +4,7 @@ import shutil
 import time
 import configparser
 from datetime import datetime
+import queue
 import threading
 import tkinter as tk
 from tkinter import scrolledtext
@@ -41,13 +42,15 @@ threads = []  # Store running threads
 server_running = False
 wait_message_id = None
 last_print_wait = False
+log_queue = queue.Queue() # Create a thread-safe queue for log messages
 
 ########### 3. Main structure management ##########
 
 # Process XML files in a multi-level subdirectory, LOOP is here !
 def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, result_0_conditions, hsc_address, hsc_port, polling_interval):
 
-    update_display(text_area, f"Start Monitoring XML: {root_dir}")
+    # update_display(text_area, f"Start Monitoring XML: {root_dir}")
+    log_message("Start Monitoring XML : ",f"{root_dir}")    
 
     while not stop_event.is_set():
 
@@ -77,7 +80,8 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 
             # Send data to the target address and port
             response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
-            update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+            log_message(f"{machine_names[idx]} : ",f" {data[1:-2]}")
+            # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
             # update_display(text_area, f"iTac  : {response}---------------------------------")
 
             # Log the event details
@@ -105,7 +109,8 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 # Process CSV files in a single subdirectory, LOOP is here !
 def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
     event_id = 1  # Initialize event ID counter
-    update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
+    # update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
+    log_message("Start Monitoring CSV: ",f"{sub_dir}")
 
     while not stop_event.is_set():
 
@@ -120,7 +125,8 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             # Parse the filename into components
             serial, datetime_part, result = parse_filename(file_name)
             if not serial or not datetime_part or not result:
-                update_display(text_area, f"Skipping invalid file name: {file_name}")
+                #update_display(text_area, f"Skipping invalid file name: {file_name}")
+                log_message("Skipping invalid file name : ", f"{file_name}")
                 continue
 
             # Determine the serial state based on the result
@@ -131,7 +137,8 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
 
             # Send data to the target address and port
             response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
-            update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+            # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+            log_message(f"{machine_names[idx]} : ", f"{data[1:-2]}")
             # update_display(text_area, f"iTac  : {response}---------------------------------")
 
             # Log the event details
@@ -215,6 +222,26 @@ def process_files():
         threads.append(thread)
 
 ############ 4. GUI function #############
+
+# Function to read from queue -> Main thread
+def process_log_queue():
+    while not log_queue.empty():
+        timestamp, message1, message2 = log_queue.get()
+        if not message2 :
+            text_area.insert(tk.END, timestamp + " ", "blue")  # Insert grey timestamp
+            text_area.insert(tk.END, message1 + "\n", "blue")  # Insert bold message    
+        else:
+            text_area.insert(tk.END, timestamp + " ", "grey")  # Insert grey timestamp
+            text_area.insert(tk.END, message1 + " ", "bold")  # Insert bold message
+            text_area.insert(tk.END, message2 + "\n")  # Insert normal message
+        text_area.see(tk.END)  # Auto-scroll
+    root.after(100, process_log_queue)  # Continuously check for new logs, recursive ?
+
+# Function to write to queue
+def log_message(message1, message2=None):
+    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")  # Format timestamp
+    log_queue.put((timestamp, message1, message2))  # Add to queue
+
 # Update machine rectangles on GUI
 def update_rectangles(idx):
 
@@ -256,13 +283,13 @@ def toggle_thread():
             threads = []  # Clear thread list
 
             server_running = False
-            update_display(text_area, "Stopped all monitoring threads.")
+            log_message("Stopped all monitoring threads.")
         else:
+            log_message("Started monitoring threads.")
             process_files()
             start_button.config(text="Stop")
             update_background((204, 255, 230))  # Pale Green
             server_running = True
-            update_display(text_area, "Started monitoring threads.")
     except Exception as e:
         update_display(text_area, f"Error occurred: {e}")
 
@@ -316,7 +343,12 @@ clear_button.pack(side="left", padx=5)
 # 4. Frame for message windows
 text_area = scrolledtext.ScrolledText(frame, width=80, height=20)
 text_area.pack(fill="both", expand=True, pady=10)
+text_area.tag_configure("bold", font=("Arial", 8, "bold"))
+text_area.tag_configure("blue", foreground="blue")
+text_area.tag_configure("grey", foreground="grey")
 
 # Entry point for the application
 if __name__ == "__main__":
+    # Start processing the log queue
+    root.after(100, process_log_queue)
     root.mainloop()
