@@ -2763,3 +2763,52 @@
 
 [2025-02-02 00:10:24] Sent: 008 ACK: Received uploadData
 
+[2025-02-02 16:54:22] Listening on port 5336
+[2025-02-02 16:54:22] Listening on port 5338
+[2025-02-02 16:54:22] Listening on port 5339
+[2025-02-02 16:54:22] Listening on port 5340
+[2025-02-02 16:54:22] Listening on port 5341
+[2025-02-02 16:54:22] Listening on port 5342
+[2025-02-02 16:54:48] Connection from ('127.0.0.1', 53959)
+[2025-02-02 16:54:48] Connection from ('127.0.0.1', 53960)
+[2025-02-02 16:54:48] Received: uploadData;1;-1;1;333240D001250661588562;-1;0;0;
+
+[2025-02-02 16:54:48] Received: uploadData;1;-1;1;333240D001250535069750;-1;0;0;
+
+[2025-02-02 16:54:48] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:48] Connection from ('127.0.0.1', 53961)
+[2025-02-02 16:54:48] Connection from ('127.0.0.1', 53962)
+[2025-02-02 16:54:48] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:48] Received: uploadData;1;-1;1;333240D001250689440054;-1;0;0;
+
+[2025-02-02 16:54:48] Received: uploadData;1;-1;1;333240D001250789869846;-1;0;0;
+
+[2025-02-02 16:54:48] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:48] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:51] Connection from ('127.0.0.1', 53964)
+[2025-02-02 16:54:51] Connection from ('127.0.0.1', 53965)
+[2025-02-02 16:54:51] Connection from ('127.0.0.1', 53966)
+[2025-02-02 16:54:51] Received: uploadData;1;-1;1;333240D001250514002502;-1;0;0;
+
+[2025-02-02 16:54:51] Received: uploadData;1;-1;1;333240D001250535150732;-1;0;0;
+
+[2025-02-02 16:54:51] Received: uploadData;1;-1;1;333240D001250294420953;-1;0;0;
+
+[2025-02-02 16:54:51] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:51] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:54:51] Sent: 001 ACK: Received uploadData
+
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.
+[2025-02-02 16:55:48] Connection closed.

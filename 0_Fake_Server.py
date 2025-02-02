@@ -1,4 +1,4 @@
-# Version 3 : 30 Jan 25
+# Version 4 : 2 Feb 25
 
 import socket
 import threading
@@ -11,13 +11,14 @@ import random
 import string
 import pyodbc  # MSSQL connection
 
+BACKROUND_COLOR = (230, 242, 255) # Pale blue
+
 class FakeTCPServer:
     def __init__(self, master, config):
         self.master = master
         self.config = config
         
         self.machine_names = config['Machine_Names']
-        self.machine_types = config['Machine_Types']
         self.ports = config['Ports']
         self.response_delay = config['Response_Delay'] / 1000  # Convert ms to seconds
         self.log_file = config['Log_File']
@@ -54,7 +55,8 @@ class FakeTCPServer:
             frame = tk.Frame(self.master, borderwidth=1, relief="solid")
             frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
-            label = tk.Label(frame, text=f"Port {port} : {self.machine_names[idx]} ({self.machine_types[idx]})")
+            label = tk.Label(frame, text=f"AOI {idx+1} :Port {port}")
+            label = tk.Label(frame, text=f"Port {port} : {self.machine_names[idx]}")
             label.pack(anchor=tk.W)
 
             text_widget = tk.Text(frame, width=30, height=10)
@@ -92,7 +94,7 @@ class FakeTCPServer:
         else:
             self.start_servers()
             self.toggle_button.config(text="Stop")
-            self.update_background((204, 255, 230))  # Change background to pale green when running
+            self.update_background(BACKROUND_COLOR)  # Change background to pale blue when running
 
     def handle_client(self, client_socket, port):
         while self.running:
@@ -125,24 +127,24 @@ class FakeTCPServer:
     def generate_random_serial(self):
         return ''.join(random.choices(string.ascii_uppercase, k=6)) + ''.join(random.choices(string.digits, k=9))
 
-    def query_block_numbers(self, serial):
-        query = '''
+    def query_block_numbers(self, boardrecord):
+        query = f"""
         SELECT BlockNumber, MIN(CAST(Confirm AS INT)) AS Total_Confirm
         FROM {self.table_false}
-        WHERE BarcodeID = ?
+        WHERE BoardRecord = ?
         GROUP BY BlockNumber
-        ORDER BY BlockNumber ASC'''
+        ORDER BY BlockNumber ASC
+        """
         block_numbers = []
+        
         try:
-            conn = pyodbc.connect(self.db_connection_string)
-            cursor = conn.cursor()
-            cursor.execute(query, (serial,))
-            for row in cursor.fetchall():
-                block_numbers.append(row.BlockNumber)
-            cursor.close()
-            conn.close()
+            with pyodbc.connect(self.db_connection_string) as conn: #Used with statements to auto-close DB connections.
+                with conn.cursor() as cursor:
+                    cursor.execute(query, (boardrecord,))
+                    block_numbers = [row[0] for row in cursor.fetchall()]
         except Exception as e:
             print(f"Database error: {e}")
+        
         return block_numbers
 
     def handle_product_start(self, port, data):
@@ -151,7 +153,7 @@ class FakeTCPServer:
             if len(parts) < 3:
                 return "Error: Invalid data format"
             event_id, serial = parts[1], parts[2]
-            block_numbers = self.query_block_numbers(serial)
+            block_numbers = self.query_block_numbers(event_id)
             serial_numbers = len(block_numbers)
             serial_data = [f"{self.generate_random_serial()};{block};0" for block in block_numbers]
             response = f"productStart;{event_id};0;OK;{serial_numbers};" + ';'.join(serial_data) + "\x0D\x0A"
@@ -219,9 +221,8 @@ def read_config(file_path):
         'User':parser.get('DB_Server', 'User'),
         'Pwd':parser.get('DB_Server', 'Pwd'),
         'Table_False':parser.get('DB_Server', 'Table_False'),
-
-        'Machine_Names': list(parser.get('HSC_Server', 'Machine_Names').split(',')),
-        'Machine_Types': list(parser.get('HSC_Server', 'Machine_Types').split(',')),
+        
+        'Machine_Names': [ft.strip() for ft in parser.get('HSC_Server', 'Machine_Names').split(',')],
         'Ports': list(map(int, parser.get('HSC_Server', 'Ports').split(','))),
         'Response_Delay': parser.getint('HSC_Server', 'Response_Delay'),
         'Log_File': parser.get('HSC_Server', 'Log_File')
