@@ -4,6 +4,7 @@ __pycache__/
 *$py.
 Test/
 ChatGPT/
+Output/
 
 # C extensions
 *.so

@@ -28,3 +28,8 @@ Then the user input the simulated parameters into CSVFile_Writer edit boxes
 - 'Clear' button
 - Can be used in both CSV (CKD) and XML (Palmi)
 - Highly configurable INI
+
+
+To make the exe file.
+
+> auto-py-to-exe

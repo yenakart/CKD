@@ -23,6 +23,7 @@ source_sub_dirs = []
 file_types = []
 target_dir = None
 log_dir = None
+move_file = None
 polling_interval = None
 xml_mappings = {}
 csv_result_0_conditions = []
@@ -88,13 +89,15 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
 
             if connected:
-                # Move processed XML file to the target directory, maintaining subdirectory structure.
-                relative_path = os.path.relpath(file_name, root_dir)  # Get relative path
-                target_path = os.path.join(target_root_dir, relative_path)  # Construct target path
 
-                os.makedirs(os.path.dirname(target_path), exist_ok=True)  # Create target directories if needed
-                shutil.move(file_name, target_path)  # Move file
-                # update_display(text_area, f"Processed and moved file: {file_name}")
+                if move_file == 1:
+                    relative_path = os.path.relpath(file_name, root_dir)  # Get relative path
+                    target_path = os.path.join(target_root_dir, relative_path)  # Construct target path
+
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)  # Create target directories if needed
+                    shutil.move(file_name, target_path)  # Move file
+                else:
+                    os.remove(file_name)  # Delete file
 
                 machine_updates[idx] = datetime.now()
                 machine_statuses[idx] = "OK"
@@ -148,7 +151,10 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
                 # Move the file to the target directory only if the response was successful
                 source_file = os.path.join(sub_dir, file_name)
                 target_file = os.path.join(target_sub_dir, file_name)
-                shutil.move(source_file, target_file)
+                if move_file == 1:
+                    shutil.move(source_file, target_file)  # Move the file
+                else:
+                    os.remove(source_file)  # Delete the file
                 #update_display(text_area, f"Processed and moved file: {file_name}")
 
                 # Increment the event ID, looping back to 1 after 9999
@@ -167,7 +173,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
 def process_files():
 
     global config, source_dir, source_sub_dirs, file_types, target_dir, log_dir
-    global polling_interval, xml_mappings, csv_result_0_conditions, xml_result_0_conditions
+    global move_file, polling_interval, xml_mappings, csv_result_0_conditions, xml_result_0_conditions
     global standby_time, unknown_time, hsc_address, hsc_ports, machine_names, machine_types, machine_updates, machine_statuses
     global threads, stop_event
 
@@ -180,6 +186,7 @@ def process_files():
     file_types = [ft.strip() for ft in config.get('Source', 'File_Types').split(',')]
     target_dir = config.get('Source', 'Target_Dir')  # Target directory for processed files
     log_dir = config.get('Source', 'Log_Dir')  # Directory for storing log files
+    move_file = config.get('Source', 'Move_File')  # Move file or Delete file
     polling_interval = int(config.get('Source', 'Polling_Interval', fallback=5))  # Polling interval in seconds
     xml_mappings = dict(config.items("PALMI_XML_Mapping"))
     csv_result_0_conditions = [ft.strip() for ft in config.get('Pass_Condition', 'CSV_Result_0_If_FileEnd').split(',')]  # Conditions for determining serial state
