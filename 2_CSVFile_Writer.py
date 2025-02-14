@@ -99,7 +99,7 @@ app.title("File Writer App")
 app.resizable(False, False)  # Make the window unresizable
 
 # Input for 'File number per line'
-file_number_label = ttk.Label(app, text="File number per line:")
+file_number_label = ttk.Label(app, text="PCB measured per line:")
 file_number_label.grid(row=0, column=0, padx=10, pady=10)
 file_number_var = tk.StringVar()
 file_number_entry = ttk.Entry(app, textvariable=file_number_var)

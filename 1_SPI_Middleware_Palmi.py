@@ -63,7 +63,7 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             if stop_event.is_set():
                 return  # Exit thread immediately
             
-            # Parse the filename into components
+            # Parse the XML content into components
             start_Insptime, event_id, serial, result = extract_data_from_xml(file_name, xml_mappings)
 
             if not serial or not event_id or not result:

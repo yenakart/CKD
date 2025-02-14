@@ -28,19 +28,19 @@ class FakeTCPServer:
         self.server_threads = []
         self.response_counters = {port: 0 for port in self.ports}
         # Tkinter setup
-        self.master.geometry("1200x900")  # Make the window wider
+        self.master.geometry("1200x700")  # Make the window wider
         self.master.title("Fake TCP Server")
         self.running = False
         self.frames = {}
         self.text_widgets = {}
-
-        self.setup_monitor_windows()
 
         self.toggle_button = Button(master, text="Start", command=self.toggle_servers, font=("Arial", 14), width=10, height=2)
         self.toggle_button.grid(row=5, column=0, columnspan=1, pady=10)
 
         self.clear_button = Button(master, text="Clear", command=self.clear_logs, font=("Arial", 14), width=10, height=2)
         self.clear_button.grid(row=5, column=1, columnspan=1, pady=10)
+
+        self.setup_monitor_windows()
 
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -59,7 +59,7 @@ class FakeTCPServer:
             label = tk.Label(frame, text=f"Port {port} : {self.machine_names[idx]}")
             label.pack(anchor=tk.W)
 
-            text_widget = tk.Text(frame, width=30, height=10)
+            text_widget = tk.Text(frame, width=30, height=7)
             text_widget.pack(fill=tk.BOTH, expand=True)
 
             self.frames[port] = frame
