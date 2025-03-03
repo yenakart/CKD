@@ -87,7 +87,15 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp_persistent(socket_conn, data)
+            response, success = send_data_tcp_persistent(socket_conn, data)
+
+            if not success:
+                print("Reconnecting to server...")
+                socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
+                if connected:
+                    print("Reconnected successfully. Retrying data send...")
+                    response, success = send_data_tcp_persistent(socket_conn, hsc_address, int(hsc_port), data)
+
             log_message(2, f"{machine_names[idx]} : ",f" {data[1:-2]}")
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
             # update_display(text_area, f"iTac  : {response}---------------------------------")
@@ -96,7 +104,7 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             if log_activity == 1:
                 log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
 
-            if connected:
+            if success:
 
                 if move_file == 1:
                     relative_path = os.path.relpath(file_name, root_dir)  # Get relative path
@@ -159,8 +167,16 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp_persistent(socket_conn, data)
+            response, success = send_data_tcp_persistent(socket_conn, data)
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
+
+            if not success:
+                print("Reconnecting to server...")
+                socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
+                if connected:
+                    print("Reconnected successfully. Retrying data send...")
+                    response, success = send_data_tcp_persistent(socket_conn, hsc_address, int(hsc_port), data)
+
             log_message(2, f"{machine_names[idx]} : ", f"{data[1:-2]}")
             # update_display(text_area, f"iTac  : {response}---------------------------------")
 
@@ -168,7 +184,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             if log_activity == 1:
                 log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
 
-            if connected:
+            if success:
                 # Move the file to the target directory only if the response was successful
                 source_file = os.path.join(sub_dir, file_name)
                 target_file = os.path.join(target_sub_dir, file_name)

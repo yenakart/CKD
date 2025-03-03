@@ -1,0 +1,59 @@
+[2025-03-03 16:49:21] Listening on port 5337
+[2025-03-03 16:49:21] Listening on port 5336
+[2025-03-03 16:49:21] Listening on port 5338
+[2025-03-03 16:49:21] Listening on port 5340
+[2025-03-03 16:49:21] Listening on port 5341
+[2025-03-03 16:49:21] Listening on port 5342
+[2025-03-03 16:49:21] Listening on port 5339
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60297)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60298)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60299)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60300)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60301)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60302)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60303)
+[2025-03-03 16:49:40] Connection from ('127.0.0.1', 60304)
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:49:50] Connection closed.
+[2025-03-03 16:50:04] Received: uploadData;1;-1;1;333240D001250559327347;-1;0;0;
+
+[2025-03-03 16:50:04] Received: uploadData;1;-1;1;333240D001250732348390;-1;0;0;
+
+[2025-03-03 16:50:04] Received: uploadData;1;-1;1;333240D001250556315147;-1;0;0;
+
+[2025-03-03 16:50:04] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:04] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:04] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:07] Received: uploadData;1;-1;1;333240D001250746668251;-1;0;0;
+
+[2025-03-03 16:50:07] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:07] Received: uploadData;1;-1;1;333240D001250453804420;-1;0;0;
+
+[2025-03-03 16:50:07] Received: uploadData;1;-1;1;333240D001250182357782;-1;0;0;
+
+[2025-03-03 16:50:07] Received: uploadData;1;-1;1;333240D001250150574317;-1;0;0;
+
+[2025-03-03 16:50:07] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:07] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 16:50:07] Sent: 001 ACK: Received uploadData
+
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
+[2025-03-03 17:21:29] Connection closed.
