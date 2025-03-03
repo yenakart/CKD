@@ -77,7 +77,7 @@ def determine_serial_state(result, result_0_conditions):
 ### 2.3 Send data output to many types of target ###
 
 # Persistent connection function with retry logic
-def establish_tcp_connection(address, port, max_retries=5):
+def establish_tcp_connection(address, port, max_retries=2):
     wait_time = 2  # Initial wait time in seconds
     for attempt in range(max_retries):
         try:
@@ -88,7 +88,7 @@ def establish_tcp_connection(address, port, max_retries=5):
         except Exception as e:
             print(f"Attempt {attempt + 1}: Error connecting to {address}:{port} - {e}")
             time.sleep(wait_time)
-            wait_time = min(wait_time * 2, 60)  # Exponential backoff (capped at 60s)
+            # wait_time = min(wait_time * 2, 60)  # Exponential backoff (capped at 60s)
 
     print(f"Failed to establish connection after {max_retries} attempts.")
     return None, False

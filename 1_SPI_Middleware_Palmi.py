@@ -51,14 +51,14 @@ log_queue = queue.Queue() # Create a thread-safe queue for log messages
 # Process XML files in a multi-level subdirectory, LOOP is here !
 def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, result_0_conditions, hsc_address, hsc_port, polling_interval):
 
-    # update_display(text_area, f"Start Monitoring XML: {root_dir}")
-    log_message("Start Monitoring XML : ",f"{root_dir}")    
-    
     # Establish persistent connection
     socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
     if not connected:
-        log_message("Failed to establish connection to server.", "")
+        log_message(0, f"Failed to establish connection to {hsc_address}:{hsc_port}")
         return  # Exit if unable to connect    
+    
+    # update_display(text_area, f"Start Monitoring XML: {root_dir}")
+    log_message(1,f"Connected [{hsc_address}:{hsc_port}] <-- {root_dir}")    
 
     while not stop_event.is_set():
 
@@ -88,7 +88,7 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 
             # Send data to the target address and port
             response, connected = send_data_tcp_persistent(socket_conn, data)
-            log_message(f"{machine_names[idx]} : ",f" {data[1:-2]}")
+            log_message(2, f"{machine_names[idx]} : ",f" {data[1:-2]}")
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
             # update_display(text_area, f"iTac  : {response}---------------------------------")
 
@@ -120,19 +120,20 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
     # Close connection when exiting while loop
     if socket_conn:
         socket_conn.close()
-        log_message(f"Closed connection to {hsc_address}:{hsc_port}", "")
+        log_message(1,f"DISconnected [{hsc_address}:{hsc_port}]")  
 
 # Process CSV files in a single subdirectory, LOOP is here !
 def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
-    event_id = 1  # Initialize event ID counter
-    # update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
-    log_message("Start Monitoring CSV: ",f"{sub_dir}")
 
     # Establish persistent connection
     socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
     if not connected:
-        log_message("Failed to establish connection to server.", "")
+        log_message(0, f"Failed to establish connection to {hsc_address}:{hsc_port}")
         return  # Exit if unable to connect
+    
+    event_id = 1  # Initialize event ID counter
+    # update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
+    log_message(1,f"Connected [{hsc_address}:{hsc_port}] <-- {sub_dir}")  
 
     while not stop_event.is_set():
 
@@ -148,7 +149,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             serial, datetime_part, result = parse_filename(file_name)
             if not serial or not datetime_part or not result:
                 #update_display(text_area, f"Skipping invalid file name: {file_name}")
-                log_message("Skipping invalid file name : ", f"{file_name}")
+                log_message(0, f"Skipping invalid file name : {file_name}")
                 continue
 
             # Determine the serial state based on the result
@@ -160,7 +161,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             # Send data to the target address and port
             response, connected = send_data_tcp_persistent(socket_conn, data)
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
-            log_message(f"{machine_names[idx]} : ", f"{data[1:-2]}")
+            log_message(2, f"{machine_names[idx]} : ", f"{data[1:-2]}")
             # update_display(text_area, f"iTac  : {response}---------------------------------")
 
             # Log the event details
@@ -206,7 +207,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
     # Close connection when exiting while loop
     if socket_conn:
         socket_conn.close()
-        log_message(f"Closed connection to {hsc_address}:{hsc_port}", "")
+        log_message(1,f"DISconnected [{hsc_address}:{hsc_port}]")          
 
 # Master controller : Process files across all subdirectories using multi-threading
 def process_files():
@@ -273,21 +274,29 @@ def process_files():
 # Function to read from queue -> Main thread
 def process_log_queue():
     while not log_queue.empty():
-        timestamp, message1, message2 = log_queue.get()
-        if not message2 :
-            text_area.insert(tk.END, timestamp + " ", "blue")  # Insert grey timestamp
-            text_area.insert(tk.END, message1 + "\n", "blue")  # Insert bold message    
-        else:
+        log_type, timestamp, message1, message2 = log_queue.get()
+        
+        if log_type == 0: # Error
+            text_area.insert(tk.END, timestamp + " ", "red")  # Insert blue timestamp
+            text_area.insert(tk.END, message1 + "\n", "red")  # Insert blue message 
+
+        elif log_type == 1: # System general notification
+            text_area.insert(tk.END, timestamp + " ", "blue")  # Insert blue timestamp
+            text_area.insert(tk.END, message1 + "\n", "blue")  # Insert blue message 
+        
+        else: # Operation (by machine) notification
             text_area.insert(tk.END, timestamp + " ", "grey")  # Insert grey timestamp
             text_area.insert(tk.END, message1 + " ", "bold")  # Insert bold message
             text_area.insert(tk.END, message2 + "\n")  # Insert normal message
+
         text_area.see(tk.END)  # Auto-scroll
+
     root.after(100, process_log_queue)  # Continuously check for new logs, recursive ?
 
 # Function to write to queue
-def log_message(message1, message2=None):
+def log_message(log_type, message1, message2=""):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")  # Format timestamp
-    log_queue.put((timestamp, message1, message2))  # Add to queue
+    log_queue.put((log_type, timestamp, message1, message2))  # Add to queue
 
 # Update machine rectangles on GUI
 def update_rectangles(idx):
@@ -330,9 +339,9 @@ def toggle_thread():
             threads = []  # Clear thread list
 
             server_running = False
-            log_message("Stopped all monitoring threads.")
+            log_message(1, "Stopped all monitoring threads.")
         else:
-            log_message("Started monitoring threads.")
+            log_message(1, "Started monitoring threads.")
             process_files()
             start_button.config(text="Stop")
             update_background((204, 255, 230))  # Pale Green
@@ -392,6 +401,7 @@ text_area = scrolledtext.ScrolledText(frame, width=80, height=20)
 text_area.pack(fill="both", expand=True, pady=10)
 text_area.tag_configure("bold", font=("Arial", 8, "bold"))
 text_area.tag_configure("blue", foreground="blue")
+text_area.tag_configure("red", foreground="red")
 text_area.tag_configure("grey", foreground="grey")
 
 # Entry point for the application
