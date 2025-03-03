@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import scrolledtext
 
 from Middleware_Helper import get_csv_files_sorted_by_date, parse_filename, find_xml_files, extract_data_from_xml, determine_serial_state
-from Middleware_Helper import send_data_tcp, establish_tcp_connection, send_data_tcp_persistent, log_event, update_display
+from Middleware_Helper import send_data_tcp, log_event, update_display
 from Middleware_Helper import show_about, show_statistics, open_config
 
 ############ 1. Variable Definition #############
@@ -53,12 +53,6 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 
     # update_display(text_area, f"Start Monitoring XML: {root_dir}")
     log_message("Start Monitoring XML : ",f"{root_dir}")    
-    
-    # Establish persistent connection
-    socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
-    if not connected:
-        log_message("Failed to establish connection to server.", "")
-        return  # Exit if unable to connect    
 
     while not stop_event.is_set():
 
@@ -87,7 +81,7 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp_persistent(socket_conn, data)
+            response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
             log_message(f"{machine_names[idx]} : ",f" {data[1:-2]}")
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
             # update_display(text_area, f"iTac  : {response}---------------------------------")
@@ -117,22 +111,11 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
 
-    # Close connection when exiting while loop
-    if socket_conn:
-        socket_conn.close()
-        log_message(f"Closed connection to {hsc_address}:{hsc_port}", "")
-
 # Process CSV files in a single subdirectory, LOOP is here !
 def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
     event_id = 1  # Initialize event ID counter
     # update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
     log_message("Start Monitoring CSV: ",f"{sub_dir}")
-
-    # Establish persistent connection
-    socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
-    if not connected:
-        log_message("Failed to establish connection to server.", "")
-        return  # Exit if unable to connect
 
     while not stop_event.is_set():
 
@@ -158,7 +141,7 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
-            response, connected = send_data_tcp_persistent(socket_conn, data)
+            response, connected = send_data_tcp(hsc_address, int(hsc_port), data)
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
             log_message(f"{machine_names[idx]} : ", f"{data[1:-2]}")
             # update_display(text_area, f"iTac  : {response}---------------------------------")
@@ -202,11 +185,6 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
 
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
-
-    # Close connection when exiting while loop
-    if socket_conn:
-        socket_conn.close()
-        log_message(f"Closed connection to {hsc_address}:{hsc_port}", "")
 
 # Master controller : Process files across all subdirectories using multi-threading
 def process_files():

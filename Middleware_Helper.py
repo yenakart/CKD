@@ -1,6 +1,6 @@
 # The purpose of this file is to separate the helper function. 
 # The main code will be easy to read for both human and ChatGPT
-
+import time
 import os
 import re
 import socket
@@ -76,6 +76,36 @@ def determine_serial_state(result, result_0_conditions):
 
 ### 2.3 Send data output to many types of target ###
 
+# Persistent connection function with retry logic
+def establish_tcp_connection(address, port, max_retries=5):
+    wait_time = 2  # Initial wait time in seconds
+    for attempt in range(max_retries):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((address, port))
+            print(f"Connected to {address}:{port} on attempt {attempt + 1}")
+            return s, True
+        except Exception as e:
+            print(f"Attempt {attempt + 1}: Error connecting to {address}:{port} - {e}")
+            time.sleep(wait_time)
+            wait_time = min(wait_time * 2, 60)  # Exponential backoff (capped at 60s)
+
+    print(f"Failed to establish connection after {max_retries} attempts.")
+    return None, False
+
+# Send data over an already established TCP connection with reconnection logic
+def send_data_tcp_persistent(socket_conn, data):
+    try:
+        if socket_conn:
+            socket_conn.sendall(data.encode('utf-8'))  # Send data
+            response = socket_conn.recv(1024).decode('utf-8')  # Receive response
+            return response, True
+        else:
+            return "No active connection", False
+    except Exception as e:
+        print(f"Connection lost: {e}. Attempting to reconnect...")
+        return str(e), False  # Indicate connection failure
+    
 # Send data over TCP and receive response
 def send_data_tcp(address, port, data):
     try:
