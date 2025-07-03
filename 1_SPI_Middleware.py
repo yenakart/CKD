@@ -313,6 +313,8 @@ def process_files():
 
 ############ 4. GUI function #############
 
+MAX_LINES = 500  # Limit the maximum line of data in text_area
+
 # Function to read from queue -> Main thread
 def process_log_queue():
     while not log_queue.empty():
@@ -332,6 +334,13 @@ def process_log_queue():
             text_area.insert(tk.END, message2 + "\n")  # Insert normal message
 
         text_area.see(tk.END)  # Auto-scroll
+
+        # ✅ Check line count and delete extra lines
+        current_line_count = int(text_area.index('end-1c').split('.')[0])
+        if current_line_count > MAX_LINES:
+            # Remove extra lines from the top (1.0 = first line, 2.0 = second line, etc.)
+            delete_until = current_line_count - MAX_LINES
+            text_area.delete("1.0", f"{delete_until}.0")
 
     root.after(100, process_log_queue)  # Continuously check for new logs, recursive ?
 

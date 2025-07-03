@@ -149,11 +149,11 @@ def update_display(text_area, text):
 
 def show_about():
     """Display About information."""
-    messagebox.showinfo("About", "SPI Middleware v0.1\nDeveloped by Scapegoat MM")
+    messagebox.showinfo("About", "SPI Middleware v 0.2\nDeveloped by Mr. Tortong T")
 
 def show_statistics():
     """Display Statistics information."""
-    messagebox.showinfo("Statistics", "Processed: 100 files\nErrors: 2\nLast Update: 5 minutes ago")
+    messagebox.showinfo("Statistics", "[Under Construction]")
 
 def open_config():
     # """Open the configuration file using Notepad."""
@@ -168,6 +168,6 @@ def open_config():
     password = simpledialog.askstring(" ", "Enter the password:", show="*")
     
     if password == "12345":
-        subprocess.Popen(["notepad.exe", "3_SPI_Middleware_setting.ini"])
+        subprocess.Popen(["notepad.exe", "1_SPI_Middleware_setting.ini"])
     else:
         messagebox.showerror("Access Denied", "Incorrect password!")
