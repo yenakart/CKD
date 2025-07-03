@@ -1,0 +1,24 @@
+1. Since Python 3.7 is the last version fully compatible with Windows 7. We need to download and install it.
+
+https://www.python.org/downloads/release/python-379/
+
+2. Go to installed directory and make the environment in Python 3.7
+
+cd C:\Users\u\AppData\Local\Programs\Python\Python37
+python -m venv py37env
+
+Note : We need to make the Environment only once, but before using it we need to activate this environment everytime.
+
+3. Activate the Environmant
+
+py37env\Scripts\activate
+
+4. Install necessary Python library for our program
+pip install auto-py-to-exe
+
+5. Run the program to compile Python to .exe
+auto-py-to-exe
+
+6. After the program run, select the option "One File" and "Window Based (hide the console)"
+
+Also set the location of output .exe file in "Settings > Output Directory"

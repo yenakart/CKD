@@ -33,3 +33,9 @@ Then the user input the simulated parameters into CSVFile_Writer edit boxes
 To make the exe file.
 
 > auto-py-to-exe
+
+4 July : Version 0.2 (Prepare to resign)
+- Upgrade to persistence connection mode because HSC Server seems to care about this.
+- Add default value to CSVFile_Writer
+- Correct the button to be red if start but no connection
+- There still be a minor improvement needed, if start with no connection, currently the button still be in start mode.
