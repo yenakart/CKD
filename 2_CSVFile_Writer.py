@@ -102,6 +102,7 @@ app.resizable(False, False)  # Make the window unresizable
 file_number_label = ttk.Label(app, text="PCB measured per line:")
 file_number_label.grid(row=0, column=0, padx=10, pady=10)
 file_number_var = tk.StringVar()
+file_number_var.set("5")  # ✅ Default value here
 file_number_entry = ttk.Entry(app, textvariable=file_number_var)
 file_number_entry.grid(row=0, column=1, padx=10, pady=10)
 
@@ -109,6 +110,7 @@ file_number_entry.grid(row=0, column=1, padx=10, pady=10)
 interval_label = ttk.Label(app, text="Unit-to-Unit Interval (ms):")
 interval_label.grid(row=1, column=0, padx=10, pady=10)
 interval_var = tk.StringVar()
+interval_var.set("500")  # ✅ Default value here
 interval_entry = ttk.Entry(app, textvariable=interval_var)
 interval_entry.grid(row=1, column=1, padx=10, pady=10)
 

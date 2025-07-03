@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import scrolledtext
 
 from Middleware_Helper import get_csv_files_sorted_by_date, parse_filename, find_xml_files, extract_data_from_xml, determine_serial_state
-from Middleware_Helper import send_data_tcp, establish_tcp_connection, send_data_tcp_persistent, log_event, update_display
+from Middleware_Helper import establish_tcp_connection, send_data_tcp_persistent, log_event, update_display
 from Middleware_Helper import show_about, show_statistics, open_config
 
 ############ 1. Variable Definition #############
@@ -55,10 +55,16 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
     socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
     if not connected:
         log_message(0, f"Failed to establish connection to {hsc_address}:{hsc_port}")
-        return  # Exit if unable to connect    
+        machine_statuses[idx] = "Error"
+        machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
+        update_rectangles(idx)
+        return  # Exit if unable to connect 
     
+    event_id = 1  # Initialize event ID counter
     # update_display(text_area, f"Start Monitoring XML: {root_dir}")
     log_message(1,f"Connected [{hsc_address}:{hsc_port}] <-- {root_dir}")    
+
+    is_error = False
 
     while not stop_event.is_set():
 
@@ -75,7 +81,8 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             start_Insptime, event_id, serial, result = extract_data_from_xml(file_name, xml_mappings)
 
             if not serial or not event_id or not result:
-                update_display(text_area, f"Skipping invalid file : {file_name}")
+                #update_display(text_area, f"Skipping invalid file : {file_name}")
+                log_message(0, f"Skipping invalid file name : {file_name}")
                 machine_statuses[idx] = "File_issue"
                 machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="orange") # Update GUI rectangle
                 continue
@@ -94,34 +101,49 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
                 socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
                 if connected:
                     print("Reconnected successfully. Retrying data send...")
-                    response, success = send_data_tcp_persistent(socket_conn, hsc_address, int(hsc_port), data)
-
-            log_message(2, f"{machine_names[idx]} : ",f" {data[1:-2]}")
-            # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
-            # update_display(text_area, f"iTac  : {response}---------------------------------")
-
-            # Log the event details
-            if log_activity == 1:
-                log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
+                    response, success = send_data_tcp_persistent(socket_conn, data)
 
             if success:
+                is_error = False
+                log_message(2, f"{machine_names[idx]} : ", f"{data[1:-2]}")
 
-                if move_file == 1:
-                    relative_path = os.path.relpath(file_name, root_dir)  # Get relative path
-                    target_path = os.path.join(target_root_dir, relative_path)  # Construct target path
+                relative_path = os.path.relpath(file_name, root_dir)  # Get relative path
+                target_path = os.path.join(target_root_dir, relative_path)  # Construct target path
 
-                    os.makedirs(os.path.dirname(target_path), exist_ok=True)  # Create target directories if needed
-                    shutil.move(file_name, target_path)  # Move file
+                max_retries = 5  # Maximum number of retries
+                wait_time = 0.2  # Initial wait time in seconds
+
+                for attempt in range(max_retries):
+                    try:
+                        if move_file == 1:
+                            os.makedirs(os.path.dirname(target_path), exist_ok=True)  # Create target directories if needed
+                            shutil.move(file_name, target_path)  # Move file
+                        else:
+                            os.remove(file_name)  # Attempt to delete the file
+                        break  # Exit the loop if successful
+                    except (PermissionError, FileNotFoundError) as e:
+                        print(f"Attempt {attempt + 1}: File is in use ({e}). Retrying in {wait_time} seconds...")
+                        time.sleep(wait_time)
+                        # wait_time *= 2  # Exponential backoff
                 else:
-                    os.remove(file_name)  # Delete file
+                    print(f"Failed to process the file after {max_retries} attempts.") # Hope there is not this case
 
+                # Increment the event ID, looping back to 1 after 9999
+                event_id = (event_id % 9999) + 1
                 machine_updates[idx] = datetime.now()
                 machine_statuses[idx] = "OK"
                 machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="green") # Update GUI rectangle
             else :
                 machine_statuses[idx] = "Error"
                 machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
-
+                if is_error == False:
+                    log_message(0,f"DISconnected [{hsc_address}:{hsc_port}]")
+                    is_error = True
+                        
+            # Log the event details
+            if log_activity == 1:
+                log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
+        
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
 
@@ -133,22 +155,24 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
 # Process CSV files in a single subdirectory, LOOP is here !
 def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_conditions, hsc_address, hsc_port, polling_interval):
 
-    # Establish persistent connection
+    # Establish initial TCP connection
     socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
     if not connected:
         log_message(0, f"Failed to establish connection to {hsc_address}:{hsc_port}")
+        machine_statuses[idx] = "Error"
+        machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
+        update_rectangles(idx)
         return  # Exit if unable to connect
     
     event_id = 1  # Initialize event ID counter
     # update_display(text_area, f"Start Monitoring CSV: {sub_dir}")
     log_message(1,f"Connected [{hsc_address}:{hsc_port}] <-- {sub_dir}")  
 
+    is_error = False
+
     while not stop_event.is_set():
 
         update_rectangles(idx)
-
-        #if not os.path.exists(sub_dir): 
-        #    os.makedirs(sub_dir)
 
         files = get_csv_files_sorted_by_date(sub_dir)
 
@@ -170,25 +194,20 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             response, success = send_data_tcp_persistent(socket_conn, data)
             # update_display(text_area, f"{machine_names[idx]} : {data[1:-2]}") # No need for \x0D\x0A
 
-            if not success:
+            if not success: # Can fix temporary connection drop case only
                 print("Reconnecting to server...")
                 socket_conn, connected = establish_tcp_connection(hsc_address, int(hsc_port))
                 if connected:
                     print("Reconnected successfully. Retrying data send...")
-                    response, success = send_data_tcp_persistent(socket_conn, hsc_address, int(hsc_port), data)
-
-            log_message(2, f"{machine_names[idx]} : ", f"{data[1:-2]}")
-            # update_display(text_area, f"iTac  : {response}---------------------------------")
-
-            # Log the event details
-            if log_activity == 1:
-                log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
+                    response, success = send_data_tcp_persistent(socket_conn, data)
 
             if success:
+                is_error = False
+                log_message(2, f"{machine_names[idx]} : ", f"{data[1:-2]}")
+                
                 # Move the file to the target directory only if the response was successful
                 source_file = os.path.join(sub_dir, file_name)
                 target_file = os.path.join(target_sub_dir, file_name)
-
 
                 max_retries = 5  # Maximum number of retries
                 wait_time = 0.2  # Initial wait time in seconds
@@ -216,6 +235,13 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             else :
                 machine_statuses[idx] = "Error"
                 machine_rects[idx].config(text=f"{machine_names[idx]}\n0 s", bg="red") # Update GUI rectangle
+                if is_error == False:
+                    log_message(0,f"DISconnected [{hsc_address}:{hsc_port}]")
+                    is_error = True
+
+            # Log the event details
+            if log_activity == 1:
+                log_event(log_dir, f"File: {file_name}, Sent: {data}, Response: {response}, Connected: {connected}")
 
         # Wait for the specified polling interval before the next check
         time.sleep(polling_interval)
@@ -293,8 +319,8 @@ def process_log_queue():
         log_type, timestamp, message1, message2 = log_queue.get()
         
         if log_type == 0: # Error
-            text_area.insert(tk.END, timestamp + " ", "red")  # Insert blue timestamp
-            text_area.insert(tk.END, message1 + "\n", "red")  # Insert blue message 
+            text_area.insert(tk.END, timestamp + " ", "red")  # Insert red timestamp
+            text_area.insert(tk.END, message1 + "\n", "red")  # Insert red message 
 
         elif log_type == 1: # System general notification
             text_area.insert(tk.END, timestamp + " ", "blue")  # Insert blue timestamp
