@@ -91,7 +91,8 @@ def process_subdir_xml(idx, root_dir, target_root_dir, log_dir, xml_mappings, re
             serial_nr_state = determine_serial_state(result, result_0_conditions)
             
             # Format data to send over TCP
-            data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
+            # My Org : data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
+            data = f"\x02uploadData;{event_id};0;1;{serial};1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
             response, success = send_data_tcp_persistent(socket_conn, data)
@@ -187,8 +188,9 @@ def process_subdir_csv(idx, sub_dir, target_sub_dir, log_dir, result_0_condition
             # Determine the serial state based on the result
             serial_nr_state = determine_serial_state(result, result_0_conditions)
             
-            # Format data to send over TCP
-            data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
+            # Format data to send over TCP            
+            # My Org : data = f"\x02uploadData;{event_id};-1;1;{serial};-1;{serial_nr_state};0;\x0D\x0A"
+            data = f"\x02uploadData;{event_id};0;1;{serial};1;{serial_nr_state};0;\x0D\x0A"
 
             # Send data to the target address and port
             response, success = send_data_tcp_persistent(socket_conn, data)

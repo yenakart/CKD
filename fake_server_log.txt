@@ -378,3 +378,157 @@
 [2025-07-04 00:37:09] Connection from ('127.0.0.1', 53429)
 [2025-07-04 00:37:09] Connection from ('127.0.0.1', 53430)
 [2025-07-04 00:37:09] Connection from ('127.0.0.1', 53431)
+[2025-07-04 09:51:16] Listening on port 5335
+[2025-07-04 09:51:16] Listening on port 5337
+[2025-07-04 09:51:16] Listening on port 5338
+[2025-07-04 09:51:16] Listening on port 5339
+[2025-07-04 09:51:16] Listening on port 5342
+[2025-07-04 09:51:16] Listening on port 5341
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63274)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63273)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63276)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63277)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63278)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63279)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63280)
+[2025-07-04 09:51:17] Connection from ('127.0.0.1', 63281)
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250534852423;-1;0;0;
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250251596777;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250895634244;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250876583642;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250611922239;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250934562839;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;1;-1;1;333240D001250424190892;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250117465766;-1;0;0;
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 001 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250958259125;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250863909289;-1;1;0;
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250401206268;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250171118758;-1;0;0;
+
+[2025-07-04 09:51:20] Received: uploadData;2;-1;1;333240D001250893672747;-1;0;0;
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:20] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;2;-1;1;333240D001250838558086;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 002 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250790484776;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250271169579;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250487985193;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250759730151;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250617153449;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250454103391;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250154538673;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250574002504;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;3;-1;1;333240D001250938371191;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250706015390;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250511333127;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 003 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250531670045;-1;1;0;
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250577326976;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;4;-1;1;333240D001250618920271;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 004 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Received: uploadData;5;-1;1;333240D001250395646505;-1;0;0;
+
+[2025-07-04 09:51:23] Received: uploadData;5;-1;1;333240D001250239092724;-1;0;0;
+
+[2025-07-04 09:51:23] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:23] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:26] Received: uploadData;5;-1;1;333240D001250681349101;-1;0;0;
+
+[2025-07-04 09:51:26] Received: uploadData;5;-1;1;333240D001250657295973;-1;1;0;
+
+[2025-07-04 09:51:26] Received: uploadData;5;-1;1;333240D001250478433044;-1;0;0;
+
+[2025-07-04 09:51:26] Received: uploadData;5;-1;1;333240D001250473111012;-1;0;0;
+
+[2025-07-04 09:51:26] Received: uploadData;5;-1;1;333240D001250975700756;-1;0;0;
+
+[2025-07-04 09:51:26] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:26] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:26] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:26] Sent: 005 ACK: Received uploadData
+
+[2025-07-04 09:51:26] Sent: 005 ACK: Received uploadData
+
